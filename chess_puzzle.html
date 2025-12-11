@@ -15,95 +15,74 @@
     color: #2a2a2a;
   }
   h1 {
-    margin-bottom: 10px;
     font-size: 2.5rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
     text-align: center;
+    margin-bottom: 10px;
   }
   p {
     font-size: 1rem;
-    margin-bottom: 15px;
     text-align: center;
+    margin-bottom: 15px;
+    font-style: italic;
   }
-  .board-container {
-    display: flex;
+  .board-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    gap: 0;
     align-items: center;
-    background: rgba(255,255,255,0.85);
-    padding: 10px;
-    border: 2px solid #3b2f2f;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    flex-wrap: wrap;
+    justify-items: center;
+  }
+  .coords-row {
+    display: flex;
+  }
+  .coords-column {
+    display: flex;
+    flex-direction: column;
+  }
+  .coord {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    font-weight: bold;
+    color: #3b2f2f;
   }
   table {
     border-collapse: collapse;
   }
   td {
-    width: 8vw;
-    height: 8vw;
-    max-width: 60px;
-    max-height: 60px;
+    width: 60px;
+    height: 60px;
+    border: 1px solid #3b2f2f;
     text-align: center;
     vertical-align: middle;
-    border: 1px solid #3b2f2f;
   }
-  .black {
-    background-color: #3b2f2f;
-    color: #fff;
-  }
-  .white {
-    background-color: #f9f2e7;
-    color: #000;
-  }
+  .black { background-color: #3b2f2f; color: #fff; }
+  .white { background-color: #f9f2e7; color: #000; }
   input {
     width: 100%;
     height: 100%;
+    font-size: 1.5rem;
     text-align: center;
-    font-size: 1.2vw;
-    max-font-size: 1.5rem;
     border: none;
     background: transparent;
     font-weight: bold;
     color: inherit;
   }
-  .coords-row, .coords-column {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1rem;
-    color: #3b2f2f;
-  }
-  .coords-column {
-    flex-direction: column;
-    justify-content: space-between;
-    margin: 0 5px;
-    height: 64vw;
-    max-height: 480px;
-  }
-  .coord {
-    width: 8vw;
-    height: 8vw;
-    max-width: 60px;
-    max-height: 60px;
-    text-align: center;
-    line-height: 8vw;
-  }
   button {
     padding: 10px 20px;
     font-size: 1rem;
+    margin-top: 15px;
     border-radius: 5px;
     border: none;
     background-color: #3b2f2f;
-    color: white;
+    color: #fff;
     cursor: pointer;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-    margin-top: 15px;
-    transition: 0.2s;
   }
-  button:hover {
-    background-color: #2a2121;
-  }
+  button:hover { background-color: #2a2121; }
   #message {
     margin-top: 15px;
     font-size: 1.2rem;
@@ -111,43 +90,34 @@
     font-weight: bold;
     text-align: center;
   }
-  #indice {
-    font-size: 0.95rem;
-    font-style: italic;
-    margin-bottom: 10px;
-    text-align: center;
-  }
   @media(max-width: 600px){
-    td, .coord {
+    .coord, td {
       width: 10vw;
       height: 10vw;
       line-height: 10vw;
     }
-    input {
-      font-size: 3vw;
-    }
-    .coords-column {
-      height: 80vw;
-    }
-    h1 {
-      font-size: 2rem;
-    }
-    p {
-      font-size: 0.9rem;
-    }
+    input { font-size: 4vw; }
+    h1 { font-size: 2rem; }
+    p { font-size: 0.9rem; }
   }
 </style>
 </head>
 <body>
 <h1>Énigme Échecs</h1>
-<p id="indice">Indice : Chaque lettre correcte révèle un secret caché de Sherlock Holmes.</p>
-<div class="coords-row" id="top-coords"></div>
-<div class="board-container">
+<p>Indice : Chaque lettre correcte révèle un secret caché de Sherlock Holmes.</p>
+<div class="board-wrapper">
+  <div></div>
+  <div class="coords-row" id="top-coords"></div>
+  <div></div>
+
   <div class="coords-column" id="left-coords"></div>
   <table id="chessboard"></table>
   <div class="coords-column" id="right-coords"></div>
+
+  <div></div>
+  <div class="coords-row" id="bottom-coords"></div>
+  <div></div>
 </div>
-<div class="coords-row" id="bottom-coords"></div>
 <button onclick="verifierSolution()">Vérifier</button>
 <div id="message"></div>
 <script>
@@ -168,7 +138,7 @@ for(let i=0; i<taille; i++){
   const row = document.createElement('tr');
   for(let j=0; j<taille; j++){
     const cell = document.createElement('td');
-    cell.className = (i+j)%2 === 0 ? 'white' : 'black';
+    cell.className = (i+j)%2===0 ? 'white' : 'black';
     const input = document.createElement('input');
     input.setAttribute('maxlength','1');
     input.id = `cell-${i}-${j}`;
@@ -182,39 +152,22 @@ const bottomCoords = document.getElementById('bottom-coords');
 const leftCoords = document.getElementById('left-coords');
 const rightCoords = document.getElementById('right-coords');
 for(let j=0; j<taille; j++){
-  const coordTop = document.createElement('div');
-  coordTop.className = 'coord';
-  coordTop.textContent = letters[j];
-  topCoords.appendChild(coordTop);
-  const coordBottom = document.createElement('div');
-  coordBottom.className = 'coord';
-  coordBottom.textContent = letters[j];
-  bottomCoords.appendChild(coordBottom);
+  const topDiv = document.createElement('div'); topDiv.className='coord'; topDiv.textContent=letters[j]; topCoords.appendChild(topDiv);
+  const bottomDiv = document.createElement('div'); bottomDiv.className='coord'; bottomDiv.textContent=letters[j]; bottomCoords.appendChild(bottomDiv);
 }
-for(let i=taille-1; i>=0; i--){
-  const coordLeft = document.createElement('div');
-  coordLeft.className = 'coord';
-  coordLeft.textContent = i+1;
-  leftCoords.appendChild(coordLeft);
-  const coordRight = document.createElement('div');
-  coordRight.className = 'coord';
-  coordRight.textContent = i+1;
-  rightCoords.appendChild(coordRight);
+for(let i=taille-1;i>=0;i--){
+  const leftDiv = document.createElement('div'); leftDiv.className='coord'; leftDiv.textContent=i+1; leftCoords.appendChild(leftDiv);
+  const rightDiv = document.createElement('div'); rightDiv.className='coord'; rightDiv.textContent=i+1; rightCoords.appendChild(rightDiv);
 }
 function verifierSolution(){
   let correct = true;
-  for(let i=0; i<taille; i++){
-    for(let j=0; j<taille; j++){
+  for(let i=0;i<taille;i++){
+    for(let j=0;j<taille;j++){
       const input = document.getElementById(`cell-${i}-${j}`);
-      const val = input.value.toUpperCase();
-      const sol = solution[i][j].toUpperCase();
-      if(sol !== '' && val !== sol){
-        correct = false;
-      }
+      if(solution[i][j] && input.value.toUpperCase() !== solution[i][j].toUpperCase()) correct=false;
     }
   }
-  const message = document.getElementById('message');
-  message.textContent = correct ? 'Félicitations ! Vous avez résolu l’énigme et découvert le secret de Sherlock !' : 'Certaines lettres sont incorrectes. Continuez votre enquête !';
+  document.getElementById('message').textContent = correct ? 'Félicitations ! Vous avez résolu l’énigme et découvert le secret de Sherlock !' : 'Certaines lettres sont incorrectes. Continuez votre enquête !';
 }
 </script>
 </body>
