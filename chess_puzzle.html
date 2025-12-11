@@ -5,121 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Énigme Échecs Sherlock Holmes</title>
 <style>
-  body {
-    font-family: 'Georgia', serif;
-    background: #f3e8c9 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    color: #2a2a2a;
-  }
-  h1 {
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  p {
-    font-size: 1rem;
-    text-align: center;
-    margin-bottom: 15px;
-    font-style: italic;
-  }
-  .board-wrapper {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto 1fr auto;
-    gap: 0;
-    align-items: center;
-    justify-items: center;
-  }
-  .coords-row {
-    display: flex;
-  }
-  .coords-column {
-    display: flex;
-    flex-direction: column;
-  }
-  .coord {
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    line-height: 60px;
-    font-weight: bold;
-    color: #3b2f2f;
-  }
-  table {
-    border-collapse: collapse;
-  }
-  td {
-    width: 60px;
-    height: 60px;
-    border: 1px solid #3b2f2f;
-    text-align: center;
-    vertical-align: middle;
-  }
-  .black { background-color: #3b2f2f; color: #fff; }
-  .white { background-color: #f9f2e7; color: #000; }
-  input {
-    width: 100%;
-    height: 100%;
-    font-size: 1.5rem;
-    text-align: center;
-    border: none;
-    background: transparent;
-    font-weight: bold;
-    color: inherit;
-  }
-  button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    margin-top: 15px;
-    border-radius: 5px;
-    border: none;
-    background-color: #3b2f2f;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-  }
-  button:hover { background-color: #2a2121; }
-  #message {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    color: green;
-    font-weight: bold;
-    text-align: center;
-  }
-  @media(max-width: 600px){
-    .coord, td {
-      width: 10vw;
-      height: 10vw;
-      line-height: 10vw;
-    }
-    input { font-size: 4vw; }
-    h1 { font-size: 2rem; }
-    p { font-size: 0.9rem; }
-  }
+body {
+  font-family: 'Georgia', serif;
+  background: #f3e8c9 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  color: #2a2a2a;
+}
+h1 { font-size: 2.5rem; text-align: center; margin-bottom: 10px; }
+p { font-size: 1rem; text-align: center; margin-bottom: 15px; font-style: italic; }
+
+.board-container { display: flex; flex-direction: column; align-items: center; }
+.coords-row { display: flex; width: min(80vw, 400px); }
+.coord-horizontal { flex: 1; display: flex; justify-content: center; align-items: center; font-weight: bold; padding: 2px 0; }
+.board-wrapper { display: flex; flex-direction: row; margin: 4px 0; }
+.coords-column { display: flex; flex-direction: column; }
+.coord-vertical { flex: 1; display: flex; justify-content: center; align-items: center; font-weight: bold; padding: 0 2px; }
+#chessboard-wrapper { aspect-ratio: 1 / 1; width: min(80vw, 400px); display: grid; margin: 0 4px; }
+table { border-collapse: collapse; width: 100%; height: 100%; table-layout: fixed; }
+td { padding: 0; }
+.black { background-color: #3b2f2f; color: #fff; }
+.white { background-color: #f9f2e7; color: #000; }
+
+/* Champs de saisie */
+input {
+  width: 100%; height: 100%; font-size: 1.5rem; text-align: center;
+  border: 1px solid #555555; background: transparent; font-weight: bold;
+  color: #1a73e8; box-sizing: border-box; border-radius: 3px; outline: none;
+  transition: 0.2s all;
+}
+input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 5px rgba(26,115,232,0.6);
+  background-color: rgba(255,255,255,0.1);
+  transform: scale(1.1);
+}
+
+button {
+  padding: 10px 20px; font-size: 1rem; margin-top: 15px; border-radius: 5px;
+  border: none; background-color: #3b2f2f; color: #fff; cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+}
+button:hover { background-color: #2a2121; }
+
+#message { margin-top: 15px; font-size: 1.2rem; color: green; font-weight: bold; text-align: center; }
+
+@media(max-width:600px){ h1 { font-size: 2rem; } p { font-size: 0.9rem; } input { font-size: 4vw; } }
 </style>
 </head>
 <body>
 <h1>Énigme Échecs</h1>
 <p>Indice : Chaque lettre correcte révèle un secret caché de Sherlock Holmes.</p>
-<div class="board-wrapper">
-  <div></div>
-  <div class="coords-row" id="top-coords"></div>
-  <div></div>
-
-  <div class="coords-column" id="left-coords"></div>
-  <table id="chessboard"></table>
-  <div class="coords-column" id="right-coords"></div>
-
-  <div></div>
-  <div class="coords-row" id="bottom-coords"></div>
-  <div></div>
+<div class="coords-row" id="top-coords"></div>
+<div class="board-container">
+  <div class="board-wrapper">
+    <div class="coords-column" id="left-coords"></div>
+    <div id="chessboard-wrapper"><table id="chessboard"></table></div>
+    <div class="coords-column" id="right-coords"></div>
+  </div>
 </div>
+<div class="coords-row" id="bottom-coords"></div>
 <button onclick="verifierSolution()">Vérifier</button>
 <div id="message"></div>
+
 <script>
 const taille = 8;
 const solution = [
@@ -133,41 +83,59 @@ const solution = [
   ['','','','','','','','A']
 ];
 const letters = ['a','b','c','d','e','f','g','h'];
+
+// Création du plateau
 const chessboard = document.getElementById('chessboard');
-for(let i=0; i<taille; i++){
+for(let i=0;i<taille;i++){
   const row = document.createElement('tr');
-  for(let j=0; j<taille; j++){
+  for(let j=0;j<taille;j++){
     const cell = document.createElement('td');
     cell.className = (i+j)%2===0 ? 'white' : 'black';
     const input = document.createElement('input');
     input.setAttribute('maxlength','1');
+    input.setAttribute('pattern','[A-Za-z]');
     input.id = `cell-${i}-${j}`;
+    input.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/[^A-Za-z]/g,'').toUpperCase();
+      e.target.style.color = '#1a73e8';
+    });
     cell.appendChild(input);
     row.appendChild(cell);
   }
   chessboard.appendChild(row);
 }
+
+// Coordonnées horizontales
 const topCoords = document.getElementById('top-coords');
 const bottomCoords = document.getElementById('bottom-coords');
+for(let j=0;j<taille;j++){
+  const topDiv = document.createElement('div'); topDiv.className='coord-horizontal'; topDiv.textContent=letters[j]; topCoords.appendChild(topDiv);
+  const bottomDiv = document.createElement('div'); bottomDiv.className='coord-horizontal'; bottomDiv.textContent=letters[j]; bottomCoords.appendChild(bottomDiv);
+}
+
+// Coordonnées verticales
 const leftCoords = document.getElementById('left-coords');
 const rightCoords = document.getElementById('right-coords');
-for(let j=0; j<taille; j++){
-  const topDiv = document.createElement('div'); topDiv.className='coord'; topDiv.textContent=letters[j]; topCoords.appendChild(topDiv);
-  const bottomDiv = document.createElement('div'); bottomDiv.className='coord'; bottomDiv.textContent=letters[j]; bottomCoords.appendChild(bottomDiv);
-}
 for(let i=taille-1;i>=0;i--){
-  const leftDiv = document.createElement('div'); leftDiv.className='coord'; leftDiv.textContent=i+1; leftCoords.appendChild(leftDiv);
-  const rightDiv = document.createElement('div'); rightDiv.className='coord'; rightDiv.textContent=i+1; rightCoords.appendChild(rightDiv);
+  const leftDiv = document.createElement('div'); leftDiv.className='coord-vertical'; leftDiv.textContent=i+1; leftCoords.appendChild(leftDiv);
+  const rightDiv = document.createElement('div'); rightDiv.className='coord-vertical'; rightDiv.textContent=i+1; rightCoords.appendChild(rightDiv);
 }
+
+// Vérification stricte : toutes les cases correctes et aucune lettre en trop
 function verifierSolution(){
   let correct = true;
   for(let i=0;i<taille;i++){
     for(let j=0;j<taille;j++){
       const input = document.getElementById(`cell-${i}-${j}`);
-      if(solution[i][j] && input.value.toUpperCase() !== solution[i][j].toUpperCase()) correct=false;
+      const val = input.value.toUpperCase();
+      const sol = solution[i][j].toUpperCase();
+      if(sol === '' && val !== '') correct = false; // case vide mais utilisateur a écrit
+      if(sol !== '' && val !== sol) correct = false; // mauvaise lettre ou vide
     }
   }
-  document.getElementById('message').textContent = correct ? 'Félicitations ! Vous avez résolu l’énigme et découvert le secret de Sherlock !' : 'Certaines lettres sont incorrectes. Continuez votre enquête !';
+  document.getElementById('message').textContent = correct ? 
+    'Félicitations ! Vous avez résolu l’énigme et découvert le secret de Sherlock !' : 
+    'Certaines lettres sont incorrectes. Continuez votre enquête !';
 }
 </script>
 </body>
