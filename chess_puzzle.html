@@ -7,8 +7,7 @@
 <style>
   body {
     font-family: 'Georgia', serif;
-    background: url('https://upload.wikimedia.org/wikipedia/commons/8/87/Old_parchment.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: #f3e8c9 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,28 +17,39 @@
   h1 {
     margin-bottom: 10px;
     font-size: 3rem;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
   }
   p {
     font-size: 1.2rem;
     margin-bottom: 20px;
     text-align: center;
-    text-shadow: 1px 1px #fff;
+  }
+  .board-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.85);
+    padding: 10px;
+    border: 2px solid #3b2f2f;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
   }
   table {
     border-collapse: collapse;
-    margin-bottom: 20px;
   }
   td {
     width: 60px;
     height: 60px;
-    border: 2px solid #3b2f2f;
     text-align: center;
     vertical-align: middle;
-    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #3b2f2f;
   }
-  td:nth-child(even) {
-    background-color: rgba(200, 200, 200, 0.9);
+  .black {
+    background-color: #3b2f2f;
+    color: #fff;
+  }
+  .white {
+    background-color: #f9f2e7;
+    color: #000;
   }
   input {
     width: 100%;
@@ -49,6 +59,27 @@
     border: none;
     background: transparent;
     font-weight: bold;
+    color: inherit;
+  }
+  .coords-row, .coords-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #3b2f2f;
+  }
+  .coords-column {
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 5px;
+    height: 480px; /* 8 cases * 60px */
+  }
+  .coord {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
   }
   button {
     padding: 12px 25px;
@@ -59,6 +90,8 @@
     color: white;
     cursor: pointer;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+    margin-top: 20px;
+    transition: 0.2s;
   }
   button:hover {
     background-color: #2a2121;
@@ -68,21 +101,25 @@
     font-size: 1.4rem;
     color: green;
     font-weight: bold;
-    text-shadow: 1px 1px #fff;
   }
   #indice {
     font-size: 1.1rem;
     font-style: italic;
     margin-bottom: 15px;
     text-align: center;
-    text-shadow: 1px 1px #fff;
   }
 </style>
 </head>
 <body>
 <h1>Énigme Échecs</h1>
 <p id="indice">Indice : Chaque lettre correcte révèle un secret caché de Sherlock Holmes.</p>
-<table id="chessboard"></table>
+<div class="coords-row" id="top-coords"></div>
+<div class="board-container">
+  <div class="coords-column" id="left-coords"></div>
+  <table id="chessboard"></table>
+  <div class="coords-column" id="right-coords"></div>
+</div>
+<div class="coords-row" id="bottom-coords"></div>
 <button onclick="verifierSolution()">Vérifier</button>
 <div id="message"></div>
 
@@ -98,13 +135,15 @@ const solution = [
   ['','','','','','','E',''],
   ['','','','','','','','A']
 ];
-
+const letters = ['a','b','c','d','e','f','g','h'];
 const chessboard = document.getElementById('chessboard');
 
+// Création de l'échiquier
 for(let i=0; i<taille; i++){
   const row = document.createElement('tr');
   for(let j=0; j<taille; j++){
     const cell = document.createElement('td');
+    cell.className = (i+j)%2 === 0 ? 'white' : 'black';
     const input = document.createElement('input');
     input.setAttribute('maxlength','1');
     input.id = `cell-${i}-${j}`;
@@ -112,6 +151,38 @@ for(let i=0; i<taille; i++){
     row.appendChild(cell);
   }
   chessboard.appendChild(row);
+}
+
+// Création des coordonnées
+const topCoords = document.getElementById('top-coords');
+const bottomCoords = document.getElementById('bottom-coords');
+const leftCoords = document.getElementById('left-coords');
+const rightCoords = document.getElementById('right-coords');
+
+// Lettres en haut et en bas
+for(let j=0; j<taille; j++){
+  const coordTop = document.createElement('div');
+  coordTop.className = 'coord';
+  coordTop.textContent = letters[j];
+  topCoords.appendChild(coordTop);
+
+  const coordBottom = document.createElement('div');
+  coordBottom.className = 'coord';
+  coordBottom.textContent = letters[j];
+  bottomCoords.appendChild(coordBottom);
+}
+
+// Chiffres à gauche et à droite (alignés sur les cases)
+for(let i=taille-1; i>=0; i--){
+  const coordLeft = document.createElement('div');
+  coordLeft.className = 'coord';
+  coordLeft.textContent = i+1;
+  leftCoords.appendChild(coordLeft);
+
+  const coordRight = document.createElement('div');
+  coordRight.className = 'coord';
+  coordRight.textContent = i+1;
+  rightCoords.appendChild(coordRight);
 }
 
 function verifierSolution(){
