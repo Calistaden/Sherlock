@@ -108,27 +108,36 @@ function handleClick(e){
     }
   } else if(color === 'gray'){
     return;
-  } else if(color === 'orange'){
+  } else if (color === 'orange') {
     const adjacent = [];
-    if(row>0) adjacent.push(cells[row-1][col].style.backgroundColor);
-    if(row<size-1) adjacent.push(cells[row+1][col].style.backgroundColor);
-    if(col>0) adjacent.push(cells[row][col-1].style.backgroundColor);
-    if(col<size-1) adjacent.push(cells[row][col+1].style.backgroundColor);
 
+    if (row > 0) adjacent.push(cells[row - 1][col].style.backgroundColor);
+    if (row < size - 1) adjacent.push(cells[row + 1][col].style.backgroundColor);
+    if (col > 0) adjacent.push(cells[row][col - 1].style.backgroundColor);
+    if (col < size - 1) adjacent.push(cells[row][col + 1].style.backgroundColor);
+
+    // Compter les couleurs adjacentes
     const counts = {};
-    adjacent.forEach(c => { counts[c] = (counts[c]||0)+1; });
+    adjacent.forEach(c => counts[c] = (counts[c] || 0) + 1);
 
+    // Trouver la couleur la plus fréquente
     let majorityColor = null;
-    let max = 0;
-    for(const c in counts){
-      if(counts[c] > max){
-        max = counts[c];
-        majorityColor = c;
-      }
+    let maxCount = 0;
+    let tie = false;
+
+    for (const c in counts) {
+        if (counts[c] > maxCount) {
+            majorityColor = c;
+            maxCount = counts[c];
+            tie = false;              // nouvelle couleur la mieux classée
+        } else if (counts[c] === maxCount) {
+            tie = true;               // égalité détectée
+        }
     }
-    // Ne change que si une couleur apparaît strictement plus de la moitié des adjacents
-    if(max > adjacent.length / 2){
-      cell.style.backgroundColor = majorityColor;
+
+    // Si égalité → reste orange
+    if (!tie) {
+        cell.style.backgroundColor = majorityColor;
     }
   } else if(color === 'yellow'){
     if(row>0){
