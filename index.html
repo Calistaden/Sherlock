@@ -6,44 +6,73 @@
 <title>Escape Game Sherlock Holmes</title>
 <style>
 body {
-margin: 0;
-font-family: "Georgia", serif;
-background: #f3e8c9 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
-color: #2a2a2a;
-padding: 40px;
-text-align: center;
+  margin: 0;
+  font-family: "Georgia", serif;
+  background: #f3e8c9 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
+  color: #2a2a2a;
+  padding: 40px 20px;
+  text-align: center;
+  box-sizing: border-box;
 }
 .container {
-max-width: 800px;
-margin: auto;
-background: rgba(255, 255, 255, 0.85);
-padding: 30px;
-border: 2px solid #3b2f2f;
-border-radius: 8px;
-box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  max-width: 800px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 30px 20px;
+  border: 2px solid #3b2f2f;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
 h1 {
-font-size: 3rem;
-margin-bottom: 10px;
+  font-size: 3rem;
+  margin-bottom: 10px;
 }
 h2 {
-font-size: 1.6rem;
-margin-top: 0;
-font-style: italic;
+  font-size: 1.6rem;
+  margin-top: 0;
+  font-style: italic;
+}
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 .btn {
-display: inline-block;
-margin-top: 25px;
-padding: 15px 25px;
-font-size: 1.2rem;
-background: #3b2f2f;
-color: #fff;
-text-decoration: none;
-border-radius: 5px;
-transition: 0.2s;
+  display: inline-block;
+  margin-top: 25px;
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  background: #3b2f2f;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: 0.2s;
 }
 .btn:hover {
-background: #2a2121;
+  background: #2a2121;
+}
+
+/* Responsive */
+@media(max-width: 600px){
+  body {
+    padding: 20px 10px;
+  }
+  .container {
+    padding: 20px 15px;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+  .btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    margin-top: 20px;
+  }
 }
 </style>
 </head>
