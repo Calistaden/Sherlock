@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mora Jai Box 3x3</title>
+<style>
+body {
+  font-family: 'Georgia', serif;
+  background: #f3e8c9 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
+  color: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+h1 { text-align: center; }
+#grid {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 5px;
+  margin-top: 20px;
+}
+.cell {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: 0.2s all;
+}
+button {
+  padding: 10px 20px;
+  margin-top: 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #3b2f2f;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover { background-color: #2a2121; }
+#message { margin-top: 15px; font-weight: bold; font-size: 1.2rem; color: green; }
+@media(max-width:500px){
+  #grid { grid-template-columns: repeat(3, 20vw); grid-template-rows: repeat(3, 20vw); }
+  .cell { width: 20vw; height: 20vw; }
+}
+</style>
+</head>
+<body>
+<h1>Mora Jai Box 3x3</h1>
+<p>Cliquez sur les cases pour activer leur effet :</p>
+<div id="grid"></div>
+<button onclick="resetGrid()">Réinitialiser la grille</button>
+<div id="message"></div>
+
+<script>
+const size = 3;
+let cells = [];
+
+// setup initial fixe
+const initialSetup = [
+  ['black','black','black'],
+  ['orange','gray','orange'],
+  ['yellow','gray','yellow']
+];
+
+// création de la grille
+const grid = document.getElementById('grid');
+function createGrid(){
+  grid.innerHTML = '';
+  cells = [];
+  for(let i=0; i<size; i++){
+    cells[i] = [];
+    for(let j=0; j<size; j++){
+      const div = document.createElement('div');
+      div.classList.add('cell');
+      div.style.backgroundColor = initialSetup[i][j];
+      div.dataset.row = i;
+      div.dataset.col = j;
+      div.addEventListener('click', handleClick);
+      grid.appendChild(div);
+      cells[i][j] = div;
+    }
+  }
+  document.getElementById('message').textContent = '';
+}
+createGrid();
+
+// fonction clic
+function handleClick(e){
+  const cell = e.target;
+  const row = parseInt(cell.dataset.row);
+  const col = parseInt(cell.dataset.col);
+  const color = cell.style.backgroundColor;
+
+  if(color === 'black'){
+    const rowColors = cells[row].map(c => c.style.backgroundColor);
+    for(let j=0;j<size;j++){
+      const newIndex = (j+1)%size;
+      cells[row][newIndex].style.backgroundColor = rowColors[j];
+    }
+  } else if(color === 'gray'){
+    return;
+  } else if(color === 'orange'){
+    const adjacent = [];
+    if(row>0) adjacent.push(cells[row-1][col].style.backgroundColor);
+    if(row<size-1) adjacent.push(cells[row+1][col].style.backgroundColor);
+    if(col>0) adjacent.push(cells[row][col-1].style.backgroundColor);
+    if(col<size-1) adjacent.push(cells[row][col+1].style.backgroundColor);
+
+    const counts = {};
+    adjacent.forEach(c => { counts[c] = (counts[c]||0)+1; });
+
+    let majorityColor = null;
+    let max = 0;
+    for(const c in counts){
+      if(counts[c] > max){
+        max = counts[c];
+        majorityColor = c;
+      }
+    }
+    // Ne change que si une couleur apparaît strictement plus de la moitié des adjacents
+    if(max > adjacent.length / 2){
+      cell.style.backgroundColor = majorityColor;
+    }
+  } else if(color === 'yellow'){
+    if(row>0){
+      const aboveCell = cells[row-1][col];
+      const temp = cell.style.backgroundColor;
+      cell.style.backgroundColor = aboveCell.style.backgroundColor;
+      aboveCell.style.backgroundColor = temp;
+    }
+  }
+
+  checkVictory();
+}
+
+// réinitialiser la grille
+function resetGrid(){
+  createGrid();
+}
+
+// vérifier victoire : les 4 coins sont noirs
+function checkVictory(){
+  if(cells[0][0].style.backgroundColor === 'black' &&
+     cells[0][2].style.backgroundColor === 'black' &&
+     cells[2][0].style.backgroundColor === 'black' &&
+     cells[2][2].style.backgroundColor === 'black'){
+    document.getElementById('message').textContent = '🎉 Victoire ! Les 4 coins sont noirs !';
+  } else {
+    document.getElementById('message').textContent = '';
+  }
+}
+</script>
+</body>
+</html>
