@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mora Jai Box – Puzzle Game</title>
+
+<style>
+body {
+  font-family: 'Georgia', serif;
+  background: #e9dfc5 url('https://upload.wikimedia.org/wikipedia/commons/0/0e/Old_paper_background.jpg') repeat;
+  color: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 2.3rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+p.description {
+  margin-bottom: 30px;
+}
+
+#grid-container {
+  position: relative;
+  margin-top: 20px;
+}
+
+/* Grille */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-template-rows: repeat(3, 70px);
+  gap: 10px;
+}
+
+/* Indicateurs aux coins */
+.corner-indicator {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  border: 2px solid #1976d2; /* Bordure bleu */
+}
+
+/* Positions des indicateurs */
+#ind-top-left { top: -35px; left: -35px; background: #1976d2; }
+#ind-top-right { top: -35px; right: -35px; background: #1976d2; }
+#ind-bottom-left { bottom: -50px; left: -35px; background: #1976d2; }
+#ind-bottom-right { bottom: -50px; right: -35px; background: #1976d2; }
+
+/* Cases */
+.cell {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.cell:active {
+  transform: scale(0.92);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Couleurs */
+.cell.black { background: linear-gradient(145deg, #1b1b1b, #333); }
+.cell.green { background: linear-gradient(145deg, #2e7d32, #4caf50); }
+.cell.blue { background: linear-gradient(145deg, #1976d2, #42a5f5); }
+.cell.violet { background: linear-gradient(145deg, #6a1b9a, #ab47bc); }
+.cell.gray { background: linear-gradient(145deg, #a6a6a6, #cfcfcf); }
+.cell.red { background: linear-gradient(145deg, #b71c1c, #f44336); }
+
+button {
+  padding: 10px 24px;
+  margin-top: 50px;
+  font-size: 1.05rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #3b2f2f;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+button:hover {
+  background-color: #2a2121;
+  transform: translateY(-2px);
+}
+
+#moves {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#message {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.35rem;
+  color: #1f7a1f;
+}
+</style>
+</head>
+
+<body>
+<h1>Mora Jai Box</h1>
+<p class="description">Un puzzle inspiré des mécanismes d'escape games. 13232146</p>
+
+<div id="grid-container">
+  <!-- Indicateurs de victoire -->
+  <div id="ind-top-left" class="corner-indicator"></div>
+  <div id="ind-top-right" class="corner-indicator"></div>
+  <div id="ind-bottom-left" class="corner-indicator"></div>
+  <div id="ind-bottom-right" class="corner-indicator"></div>
+
+  <div id="grid"></div>
+</div>
+
+<button onclick="resetGrid()">Réinitialiser la grille</button>
+<div id="moves">Coups : 0</div>
+<div id="message"></div>
+
+<script>
+const size = 3;
+let cells = [];
+let moveCount = 0;
+
+const initialSetup = [
+  ['black','green','blue'],
+  ['blue','blue','blue'],
+  ['violet','gray','gray']
+];
+
+const grid = document.getElementById('grid');
+
+function updateMoveDisplay() {
+  document.getElementById("moves").textContent = "Coups : " + moveCount;
+}
+
+function createGrid(){
+  grid.innerHTML = '';
+  cells = [];
+
+  for(let i=0; i<size; i++){
+    cells[i] = [];
+    for(let j=0; j<size; j++){
+      const div = document.createElement('div');
+      div.className = 'cell ' + initialSetup[i][j];
+      div.dataset.row = i;
+      div.dataset.col = j;
+      div.addEventListener('click', handleClick);
+      grid.appendChild(div);
+      cells[i][j] = div;
+    }
+  }
+
+  moveCount = 0;
+  updateMoveDisplay();
+  document.getElementById('message').textContent = '';
+}
+createGrid();
+
+function getColor(r, c){
+  return [...cells[r][c].classList].find(x =>
+    ['black','green','blue','violet','gray','red'].includes(x)
+  );
+}
+
+function setColor(r, c, color){
+  cells[r][c].className = 'cell ' + color;
+}
+
+function handleClick(e){
+  const before = snapshotColors();
+
+  const cell = e.target;
+  const row = parseInt(cell.dataset.row);
+  const col = parseInt(cell.dataset.col);
+  const color = getColor(row, col);
+
+  // NOIR : décale la ligne à droite
+  if(color === 'black'){
+    const rowColors = cells[row].map((c,j) => getColor(row,j));
+    for(let j=0;j<size;j++){
+      const newIndex = (j+1)%size;
+      setColor(row,newIndex,rowColors[j]);
+    }
+  }
+
+  // VERT : échange avec case opposée par rapport au centre
+  else if(color === 'green'){
+    if(row === 1 && col === 1) return;
+    const oppRow = 2 - row;
+    const oppCol = 2 - col;
+    const temp = getColor(oppRow, oppCol);
+    setColor(oppRow, oppCol, color);
+    setColor(row, col, temp);
+  }
+
+  // BLEU : applique effet de la couleur centrale sur elle-même
+  else if(color === 'blue'){
+    const midColor = getColor(1,1);
+    if(midColor && midColor !== 'blue'){
+      applyEffectOnCell(midColor, row, col);
+    }
+  }
+
+  // VIOLET : échange avec case du dessous
+  else if(color === 'violet'){
+    if(row < 2){
+      const belowColor = getColor(row+1, col);
+      setColor(row+1, col, color);
+      setColor(row, col, belowColor);
+    }
+  }
+
+  const after = snapshotColors();
+  if(hasChanged(before, after)){
+    moveCount++;
+    updateMoveDisplay();
+  }
+
+  checkVictory();
+}
+
+// Fonction pour appliquer effet d'une couleur sur une case spécifique
+function applyEffectOnCell(color, row, col){
+  if(color === 'black'){
+    const rowColors = cells[row].map((c,j) => getColor(row,j));
+    for(let j=0;j<size;j++){
+      const newIndex = (j+1)%size;
+      setColor(row,newIndex,rowColors[j]);
+    }
+  }
+  else if(color === 'green'){
+    if(row === 1 && col === 1) return;
+    const oppRow = 2 - row;
+    const oppCol = 2 - col;
+    const temp = getColor(oppRow, oppCol);
+    setColor(oppRow, oppCol, color);
+    setColor(row, col, temp);
+  }
+  else if(color === 'violet'){
+    if(row < 2){
+      const belowColor = getColor(row+1, col);
+      setColor(row+1, col, color);
+      setColor(row, col, belowColor);
+    }
+  }
+}
+
+function snapshotColors(){
+  return cells.map(row =>
+    row.map(cell =>
+      [...cell.classList].find(c => ['black','green','blue','violet','gray','red'].includes(c))
+    )
+  );
+}
+
+function hasChanged(before, after){
+  for(let i=0;i<size;i++){
+    for(let j=0;j<size;j++){
+      if(before[i][j] !== after[i][j]) return true;
+    }
+  }
+  return false;
+}
+
+function resetGrid(){
+  createGrid();
+}
+
+function checkVictory(){
+  if(
+    getColor(0,0)==='blue' &&
+    getColor(0,2)==='blue' &&
+    getColor(2,0)==='blue' &&
+    getColor(2,2)==='blue'
+  ){
+    document.getElementById('message').textContent = '🎉 Victoire ! Les 4 coins sont bleus !';
+  } else {
+    document.getElementById('message').textContent = '';
+  }
+}
+</script>
+
+</body>
+</html>
