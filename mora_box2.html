@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mora Jai Box – Puzzle Game</title>
+<title>Moriarty Box – Puzzle Game</title>
 
 <style>
 body {
@@ -77,7 +77,6 @@ p.description {
 .cell.blue { background: linear-gradient(145deg, #1976d2, #42a5f5); }
 .cell.violet { background: linear-gradient(145deg, #6a1b9a, #ab47bc); }
 .cell.gray { background: linear-gradient(145deg, #a6a6a6, #cfcfcf); }
-.cell.red { background: linear-gradient(145deg, #b71c1c, #f44336); }
 
 button {
   padding: 10px 24px;
@@ -109,13 +108,28 @@ button:hover {
   font-size: 1.35rem;
   color: #1f7a1f;
 }
+
+ul{
+    list-style-type: none;
+}
+
 </style>
 </head>
 
 <body>
-<h1>Mora Jai Box</h1>
-<p class="description">Un puzzle inspiré des mécanismes d'escape games. 13232146</p>
-
+<h1>Moriarty box</h1>
+<p class="description">Encore une étrange boîte ornée de tuiles colorées.<br>
+Une inscription presque effacée est visible sur le dessous de la boîte : 
+<i><ul>
+          <li><strong style="color: grey;">Le Silence</strong> retient son souffle, le monde continuera bien sans lui</li>
+		  <li><strong style="color: black;">L’Ombre</strong> fait glisser le monde sur son passage.</li>
+          <li><strong style="color: green;">Le Miroir</strong> échange sa place avec son reflet.</li>
+		  <li><strong style="color: purple;">La Chute</strong> et <strong style="color: goldenrod;">L'ascension</strong> s'opposent. l'une creuse sa tombe et l'autre s'élève aux cieux.</li>
+          <li><strong style="color: blue;">L’Apprenti</strong> immite son maître qui règne</li>
+		  <li><strong style="color: orange;">Le Conformiste</strong> se rallie à la majorité</li>
+</ul></i>
+Il doit bien y avoir une façon de l'ouvrir...</p>
+<!-- Solution : 13232146 -->
 <div id="grid-container">
   <!-- Indicateurs de victoire -->
   <div id="ind-top-left" class="corner-indicator"></div>
@@ -143,6 +157,8 @@ const initialSetup = [
 
 const grid = document.getElementById('grid');
 
+/* ========= INITIALISATION ========= */
+
 function updateMoveDisplay() {
   document.getElementById("moves").textContent = "Coups : " + moveCount;
 }
@@ -168,60 +184,90 @@ function createGrid(){
   updateMoveDisplay();
   document.getElementById('message').textContent = '';
 }
+
 createGrid();
 
+/* ========= UTILITAIRES ========= */
+
+const COLORS = ['black','green','blue','violet','gray'];
+
 function getColor(r, c){
-  return [...cells[r][c].classList].find(x =>
-    ['black','green','blue','violet','gray','red'].includes(x)
-  );
+  return [...cells[r][c].classList].find(cl => COLORS.includes(cl));
 }
 
 function setColor(r, c, color){
   cells[r][c].className = 'cell ' + color;
 }
 
+function snapshotColors(){
+  return cells.map(row => row.map(cell =>
+    [...cell.classList].find(cl => COLORS.includes(cl))
+  ));
+}
+
+function hasChanged(before, after){
+  return JSON.stringify(before) !== JSON.stringify(after);
+}
+
+/* ========= EFFETS ========= */
+
+// NOIR : décale la ligne à droite
+function effectBlack(row){
+  const rowColors = cells[row].map((_,j) => getColor(row,j));
+  for(let j=0;j<size;j++){
+    setColor(row,(j+1)%size,rowColors[j]);
+  }
+}
+
+// VERT : échange avec la case opposée
+function effectGreen(row,col){
+  if(row === 1 && col === 1) return;
+
+  const selfColor = getColor(row,col);
+  const oppRow = 2 - row;
+  const oppCol = 2 - col;
+  const oppColor = getColor(oppRow, oppCol);
+
+  setColor(row,col,oppColor);
+  setColor(oppRow,oppCol,selfColor);
+}
+
+// VIOLET : échange avec la case du dessous
+function effectViolet(row,col){
+  if(row >= 2) return;
+
+  const selfColor = getColor(row,col);
+  const belowColor = getColor(row+1,col);
+
+  setColor(row,col,belowColor);
+  setColor(row+1,col,selfColor);
+}
+
+/* ========= CLIC ========= */
+
 function handleClick(e){
   const before = snapshotColors();
 
   const cell = e.target;
-  const row = parseInt(cell.dataset.row);
-  const col = parseInt(cell.dataset.col);
-  const color = getColor(row, col);
+  const row = Number(cell.dataset.row);
+  const col = Number(cell.dataset.col);
+  const color = getColor(row,col);
 
-  // NOIR : décale la ligne à droite
   if(color === 'black'){
-    const rowColors = cells[row].map((c,j) => getColor(row,j));
-    for(let j=0;j<size;j++){
-      const newIndex = (j+1)%size;
-      setColor(row,newIndex,rowColors[j]);
-    }
+    effectBlack(row);
   }
-
-  // VERT : échange avec case opposée par rapport au centre
   else if(color === 'green'){
-    if(row === 1 && col === 1) return;
-    const oppRow = 2 - row;
-    const oppCol = 2 - col;
-    const temp = getColor(oppRow, oppCol);
-    setColor(oppRow, oppCol, color);
-    setColor(row, col, temp);
+    effectGreen(row,col);
   }
-
-  // BLEU : applique effet de la couleur centrale sur elle-même
+  else if(color === 'violet'){
+    effectViolet(row,col);
+  }
   else if(color === 'blue'){
     const midColor = getColor(1,1);
-    if(midColor && midColor !== 'blue'){
-      applyEffectOnCell(midColor, row, col);
-    }
-  }
 
-  // VIOLET : échange avec case du dessous
-  else if(color === 'violet'){
-    if(row < 2){
-      const belowColor = getColor(row+1, col);
-      setColor(row+1, col, color);
-      setColor(row, col, belowColor);
-    }
+    if(midColor === 'black') effectBlack(row);
+    else if(midColor === 'green') effectGreen(row,col);
+    else if(midColor === 'violet') effectViolet(row,col);
   }
 
   const after = snapshotColors();
@@ -233,48 +279,7 @@ function handleClick(e){
   checkVictory();
 }
 
-// Fonction pour appliquer effet d'une couleur sur une case spécifique
-function applyEffectOnCell(color, row, col){
-  if(color === 'black'){
-    const rowColors = cells[row].map((c,j) => getColor(row,j));
-    for(let j=0;j<size;j++){
-      const newIndex = (j+1)%size;
-      setColor(row,newIndex,rowColors[j]);
-    }
-  }
-  else if(color === 'green'){
-    if(row === 1 && col === 1) return;
-    const oppRow = 2 - row;
-    const oppCol = 2 - col;
-    const temp = getColor(oppRow, oppCol);
-    setColor(oppRow, oppCol, color);
-    setColor(row, col, temp);
-  }
-  else if(color === 'violet'){
-    if(row < 2){
-      const belowColor = getColor(row+1, col);
-      setColor(row+1, col, color);
-      setColor(row, col, belowColor);
-    }
-  }
-}
-
-function snapshotColors(){
-  return cells.map(row =>
-    row.map(cell =>
-      [...cell.classList].find(c => ['black','green','blue','violet','gray','red'].includes(c))
-    )
-  );
-}
-
-function hasChanged(before, after){
-  for(let i=0;i<size;i++){
-    for(let j=0;j<size;j++){
-      if(before[i][j] !== after[i][j]) return true;
-    }
-  }
-  return false;
-}
+/* ========= DIVERS ========= */
 
 function resetGrid(){
   createGrid();
@@ -287,12 +292,10 @@ function checkVictory(){
     getColor(2,0)==='blue' &&
     getColor(2,2)==='blue'
   ){
-    document.getElementById('message').textContent = '🎉 Victoire ! Les 4 coins sont bleus !';
+    document.getElementById('message').textContent =
+      '🎉 Victoire ! Les 4 coins sont bleus !';
   } else {
     document.getElementById('message').textContent = '';
   }
 }
 </script>
-
-</body>
-</html>
