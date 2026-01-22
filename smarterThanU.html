@@ -49,7 +49,6 @@ body {
 .input {
     flex: 1;
     min-height: 18px;
-    outline: none;
     white-space: pre-wrap;
     word-break: break-word;
 }
@@ -82,11 +81,18 @@ body {
     justify-content: space-between;
     font-size: 13px;
 }
+
+/* Input invisible mais actif */
+#realInput {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
 </style>
 </head>
 
 <body>
-<div class="terminal">
+<div class="terminal" onclick="focusInput()">
     <div class="title">SMARTER THAN U</div>
     <div class="separator"></div>
 
@@ -97,7 +103,7 @@ body {
 
     <div class="row">
         <div class="label">Password . . . :</div>
-        <div class="input" id="password" tabindex="0"><span id="text"></span><span class="cursor"></span></div>
+        <div class="input"><span id="text"></span><span class="cursor"></span></div>
     </div>
 
     <div class="message" id="message"></div>
@@ -109,8 +115,11 @@ body {
     </div>
 </div>
 
+<!-- VRAI INPUT POUR MOBILE -->
+<input id="realInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters">
+
 <script>
-const passwordDiv = document.getElementById("password");
+const realInput = document.getElementById("realInput");
 const textSpan = document.getElementById("text");
 const message = document.getElementById("message");
 
@@ -120,25 +129,21 @@ const errorMessages = [
     ">>> Password incorrect : Ah vous vous êtes trompés là ? J'avais pas prévu de message d'erreur tellement c'est facile..."
 ];
 
-passwordDiv.focus();
+function focusInput() {
+    realInput.focus();
+}
 
-document.addEventListener("keydown", (e) => {
-    if (e.key.length === 1) {
-        textSpan.textContent += e.key.toUpperCase();
-    }
+realInput.addEventListener("input", () => {
+    textSpan.textContent = realInput.value.toUpperCase();
+});
 
-    if (e.key === "Backspace") {
-        textSpan.textContent = textSpan.textContent.slice(0, -1);
-        e.preventDefault();
-    }
-
+realInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") checkPassword();
     if (e.key === "F2") reset();
 });
 
 function checkPassword() {
-    const value = textSpan.textContent.trim();
-    if (value === "BAIGNOIRE") {
+    if (realInput.value.toUpperCase() === "BAIGNOIRE") {
         message.textContent = ">>> Bravo, vous avez gagné";
         message.className = "message success";
     } else {
@@ -149,10 +154,13 @@ function checkPassword() {
 }
 
 function reset() {
+    realInput.value = "";
     textSpan.textContent = "";
     message.textContent = "";
     message.className = "message";
 }
+
+focusInput();
 </script>
 </body>
 </html>
