@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -20,23 +20,24 @@ body {
 .terminal {
     background-color: #000;
     padding: 20px;
-    width: 100%;
+    width: 95%;
     max-width: 600px;
+    box-sizing: border-box;
 }
 
 .banner {
     font-family: monospace;
     white-space: pre;
     text-align: center;
-    line-height: 12px;
-    font-size: 10px;
+    line-height: 1.2em;
+    font-size: 12px;
     color: #33ff66;
     margin-bottom: 15px;
 }
 
 .title {
     text-align: center;
-    font-size: 24px;
+    font-size: clamp(18px, 5vw, 24px);
     letter-spacing: 2px;
 }
 
@@ -46,6 +47,8 @@ body {
 }
 
 .input-group {
+    display: flex;
+    flex-direction: column;
     margin: 10px 0;
 }
 
@@ -58,10 +61,10 @@ input[type="text"] {
     font-size: 16px;
     width: 100%;
     box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
 button {
-    margin-top: 10px;
     padding: 6px 10px;
     background-color: #33ff66;
     color: #000;
@@ -69,6 +72,7 @@ button {
     cursor: pointer;
     font-family: "Courier New", monospace;
     font-size: 16px;
+    margin-top: 5px;
 }
 
 button:hover {
@@ -78,6 +82,24 @@ button:hover {
 .result {
     margin-top: 15px;
     font-size: 16px;
+    min-height: 20px;
+	text-align: center;
+}
+
+/* Responsive pour smartphone / tablette */
+@media (max-width: 480px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .banner {
+        font-size: 10px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 5px 8px;
+    }
 }
 </style>
 </head>
@@ -99,10 +121,11 @@ button:hover {
 
     <div class="input-group">
         <input type="text" id="wordInput" placeholder="Entrez un mot en français...">
+		<div class="result" id="result"></div>
+		<p></p>
         <button id="translateBtn">Traduire</button>
+        <button id="menuBtn">Retour au menu</button>
     </div>
-
-    <div class="result" id="result"></div>
 
 </div>
 
@@ -124,36 +147,47 @@ const dictionary = {
 // Fonction de traduction
 function translate() {
     let input = document.getElementById("wordInput").value.trim();
-	let baseinput = input
+    let baseinput = input;
 
     // Normalisation : minuscules + suppression accents
-	
     input = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     const resultDiv = document.getElementById("result");
 
     if (input === "") {
         resultDiv.textContent = "Veuillez entrer un mot.";
-		resultDiv.style.color = "#ff3333"; // rouge
+        resultDiv.style.color = "#ff3333"; // rouge
         return;
     }
 
     if (dictionary[input]) {
         resultDiv.textContent = `${baseinput} se traduit par ${dictionary[input]} en anglais`;
-		resultDiv.style.color = "#33ff66"; // vert
+        resultDiv.style.color = "#33ff66"; // vert
     } else {
         resultDiv.textContent = "Mot non trouvé";
-		resultDiv.style.color = "#ff3333"; // rouge
+        resultDiv.style.color = "#ff3333"; // rouge
     }
 }
 
-// Attacher l'événement sur le bouton
+// Bouton traduire
 document.getElementById("translateBtn").addEventListener("click", translate);
 
-// Permettre la touche Entrée pour traduire
+// Touche Entrée pour traduire
 document.getElementById("wordInput").addEventListener("keypress", function(e) {
     if (e.key === "Enter") {
         translate();
+    }
+});
+
+// Bouton Retour au menu
+document.getElementById("menuBtn").addEventListener("click", () => {
+    window.location.href = "smarterThanUMenu.html";
+});
+
+// Touche Échap pour revenir au menu
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        window.location.href = "smarterThanUMenu.html";
     }
 });
 </script>
