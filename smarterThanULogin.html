@@ -143,14 +143,20 @@ realInput.addEventListener("keydown", (e) => {
 });
 
 function checkPassword() {
-    if (realInput.value.toUpperCase() === "MASTERMIND") {
-        message.textContent = ">>> Bravo, vous avez gagné";
-        message.className = "message success";
-    } else {
-        message.textContent =
-            errorMessages[Math.floor(Math.random() * errorMessages.length)];
-        message.className = "message error";
-    }
+if (realInput.value.toUpperCase() === "MASTERMIND") {
+    // Message de succès
+    message.textContent = ">>> Mot de passe correct";
+    message.className = "message success";
+
+    // Redirection après 1 seconde pour que l'utilisateur voie le message
+    setTimeout(() => {
+        window.location.href = "SmarterThanUMenu.html";
+    }, 1000);
+} else {
+    message.textContent =
+        errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    message.className = "message error";
+}
 }
 
 function reset() {
