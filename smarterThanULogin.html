@@ -172,15 +172,13 @@ function checkPassword() {
         let dots = 0;
         const loadingInterval = setInterval(() => {
             dots++;
-            message.textContent = ">>> Chargement" + ".".repeat(dots);
-            if (dots === 3) dots = 0;
-        }, 1000); // 0,5 sec par point
+            message.textContent = ">>> Chargement : " + "█".repeat(dots);}, 250); // 0,25 sec par point
 
         // Redirection après 3 secondes
         setTimeout(() => {
             clearInterval(loadingInterval); // stop l'animation
             window.location.href = "smarterThanUMenu.html";
-        }, 4000);
+        }, 3000);
     } else {
         message.textContent =
             errorMessages[Math.floor(Math.random() * errorMessages.length)];
