@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MENU PRINCIPAL</title>
+
+<style>
+body {
+    background-color: #111;
+    margin: 0;
+    font-family: "Courier New", monospace;
+    color: #33ff66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.terminal {
+    background-color: #000;
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+.separator {
+    border-top: 2px solid #33ff66;
+    margin: 12px 0 20px;
+}
+
+.menu {
+    margin-top: 10px;
+}
+
+.menu-item {
+    padding: 6px 10px;
+    margin: 4px 0;
+    cursor: pointer;
+    white-space: pre;
+}
+
+.menu-item.active {
+    background-color: #33ff66;
+    color: #000;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+<div class="terminal">
+    <div class="title">MENU PRINCIPAL</div>
+    <div class="separator"></div>
+
+    <div class="menu">
+        <div class="menu-item active"> 1  MON DICTIONNAIRE</div>
+        <div class="menu-item"> 2  CHAMP 2</div>
+        <div class="menu-item"> 3  CHAMP 3</div>
+    </div>
+
+    <div class="footer">
+        <div>↑ ↓ = Sélection</div>
+        <div>ENTER = Valider</div>
+        <div>F12 = Quitter</div>
+    </div>
+</div>
+
+<script>
+const items = document.querySelectorAll(".menu-item");
+let index = 0;
+
+function refresh() {
+    items.forEach(i => i.classList.remove("active"));
+    items[index].classList.add("active");
+}
+
+document.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown") {
+        index = (index + 1) % items.length;
+        refresh();
+    }
+    if (e.key === "ArrowUp") {
+        index = (index - 1 + items.length) % items.length;
+        refresh();
+    }
+    if (e.key === "Enter") {
+        alert("Sélection : " + items[index].textContent.trim());
+    }
+});
+
+items.forEach((item, i) => {
+    item.addEventListener("click", () => {
+        index = i;
+        refresh();
+    });
+});
+</script>
+</body>
+</html>
