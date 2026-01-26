@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MON DICTIONNAIRE</title>
+
+<style>
+body {
+    background-color: #111;
+    margin: 0;
+    font-family: "Courier New", monospace;
+    color: #33ff66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.terminal {
+    background-color: #000;
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.banner {
+    font-family: monospace;
+    white-space: pre;
+    text-align: center;
+    line-height: 12px;
+    font-size: 10px;
+    color: #33ff66;
+    margin-bottom: 15px;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+.separator {
+    border-top: 2px solid #33ff66;
+    margin: 12px 0 20px;
+}
+
+.input-group {
+    margin: 10px 0;
+}
+
+input[type="text"] {
+    padding: 6px 10px;
+    background-color: #000;
+    color: #33ff66;
+    border: 1px solid #33ff66;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: 10px;
+    padding: 6px 10px;
+    background-color: #33ff66;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #29cc55;
+}
+
+.result {
+    margin-top: 15px;
+    font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+<div class="terminal">
+
+    <div class="banner">
+████████╗██████╗  █████╗ ██████╗ ██╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗
+╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║
+   ██║   ██████╔╝███████║██║  ██║██║   ██║██║        ██║   ██║██║   ██║██╔██╗ ██║
+   ██║   ██╔══██╗██╔══██║██║  ██║██║   ██║██║        ██║   ██║██║   ██║██║╚██╗██║
+   ██║   ██║  ██║██║  ██║██████╔╝╚██████╔╝╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
+   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+    </div>
+
+    <div class="title">MON DICTIONNAIRE</div>
+    <div class="separator"></div>
+
+    <div class="input-group">
+        <input type="text" id="wordInput" placeholder="Entrez un mot en français...">
+        <button id="translateBtn">Traduire</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+</div>
+
+<script>
+// Petit dictionnaire français -> anglais
+const dictionary = {
+    "bonjour": "hello",
+    "chat": "cat",
+    "chien": "dog",
+    "maison": "house",
+    "voiture": "car",
+    "fromage": "cheese",
+    "eau": "water",
+    "livre": "book",
+    "arbre": "tree",
+    "soleil": "sun"
+};
+
+// Fonction de traduction
+function translate() {
+    const input = document.getElementById("wordInput").value.trim().toLowerCase();
+    const resultDiv = document.getElementById("result");
+
+    if (input === "") {
+        resultDiv.textContent = "Veuillez entrer un mot.";
+        return;
+    }
+
+    if (dictionary[input]) {
+        resultDiv.textContent = `Traduction : ${dictionary[input]}`;
+    } else {
+        resultDiv.textContent = "Mot non trouvé";
+    }
+}
+
+// Attacher l'événement sur le bouton
+document.getElementById("translateBtn").addEventListener("click", translate);
+
+// Permettre la touche Entrée pour traduire
+document.getElementById("wordInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        translate();
+    }
+});
+</script>
+</body>
+</html>
