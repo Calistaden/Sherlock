@@ -143,20 +143,29 @@ realInput.addEventListener("keydown", (e) => {
 });
 
 function checkPassword() {
-if (realInput.value.toUpperCase() === "MASTERMIND") {
-    // Message de succès
-    message.textContent = ">>> Mot de passe correct";
-    message.className = "message success";
+    if (realInput.value.toUpperCase() === "MASTERMIND") {
+        // Message de succès initial
+        message.textContent = ">>> Mot de passe correct";
+        message.className = "message success";
 
-    // Redirection après 1 seconde pour que l'utilisateur voie le message
-    setTimeout(() => {
-        window.location.href = "SmarterThanUMenu.html";
-    }, 1000);
-} else {
-    message.textContent =
-        errorMessages[Math.floor(Math.random() * errorMessages.length)];
-    message.className = "message error";
-}
+        // Effet "chargement" avec points
+        let dots = 0;
+        const loadingInterval = setInterval(() => {
+            dots++;
+            message.textContent = ">>> Chargement" + ".".repeat(dots);
+            if (dots === 3) dots = 0;
+        }, 1000); // 0,5 sec par point
+
+        // Redirection après 3 secondes
+        setTimeout(() => {
+            clearInterval(loadingInterval); // stop l'animation
+            window.location.href = "smarterThanUMenu.html";
+        }, 3000);
+    } else {
+        message.textContent =
+            errorMessages[Math.floor(Math.random() * errorMessages.length)];
+        message.className = "message error";
+    }
 }
 
 function reset() {
