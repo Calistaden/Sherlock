@@ -21,7 +21,17 @@ body {
     background-color: #000;
     padding: 20px;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
+}
+
+.banner {
+    font-family: monospace;
+    white-space: pre;
+    text-align: center;
+    line-height: 12px;
+    font-size: 10px;
+    color: #33ff66;
+    margin-bottom: 15px;
 }
 
 .title {
@@ -44,6 +54,7 @@ body {
     margin: 4px 0;
     cursor: pointer;
     white-space: pre;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .menu-item.active {
@@ -62,6 +73,17 @@ body {
 
 <body>
 <div class="terminal">
+
+    <!-- Bannière SMARTER THAN U en ASCII art -->
+    <div class="banner">
+███╗   ███╗ ██████╗ ██████╗ ██╗ █████╗ ██████╗ ████████╗██╗   ██╗
+████╗ ████║██╔═══██╗██╔══██╗██║██╔══██╗██╔══██╗╚══██╔══╝╚██╗ ██╔╝
+██╔████╔██║██║   ██║██████╔╝██║███████║██████╔╝   ██║    ╚████╔╝ 
+██║╚██╔╝██║██║   ██║██╔══██╗██║██╔══██║██╔══██╗   ██║     ╚██╔╝  
+██║ ╚═╝ ██║╚██████╔╝██║  ██║██║██║  ██║██║  ██║   ██║      ██║   
+╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝   
+    </div>
+
     <div class="title">MENU PRINCIPAL</div>
     <div class="separator"></div>
 
@@ -87,6 +109,22 @@ function refresh() {
     items[index].classList.add("active");
 }
 
+// Fonction pour gérer la sélection
+function selectItem(idx) {
+    switch(idx) {
+        case 0:
+            window.location.href = "smarterThanUDico.html";
+            break;
+        case 1:
+            window.location.href = "smarterThanUChamp2.html";
+            break;
+        case 2:
+            window.location.href = "smarterThanUChamp3.html";
+            break;
+    }
+}
+
+// Navigation avec clavier
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowDown") {
         index = (index + 1) % items.length;
@@ -97,14 +135,16 @@ document.addEventListener("keydown", e => {
         refresh();
     }
     if (e.key === "Enter") {
-        alert("Sélection : " + items[index].textContent.trim());
+        selectItem(index);
     }
 });
 
+// Navigation avec clic/tactile
 items.forEach((item, i) => {
     item.addEventListener("click", () => {
         index = i;
         refresh();
+        selectItem(i);
     });
 });
 </script>
