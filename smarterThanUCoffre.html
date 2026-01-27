@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROCÉDURE COFFRE</title>
+
+<style>
+body {
+    background-color: #111;
+    margin: 0;
+    font-family: "Courier New", monospace;
+    color: #33ff66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.terminal {
+    background-color: #000;
+    padding: 20px;
+    width: 95%;
+    max-width: 700px;
+    box-sizing: border-box;
+}
+
+.banner {
+    font-family: monospace;
+    white-space: pre;
+    text-align: center;
+    line-height: 1.2em;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.title {
+    text-align: center;
+    font-size: clamp(18px, 5vw, 24px);
+    letter-spacing: 2px;
+}
+
+.separator {
+    border-top: 2px solid #33ff66;
+    margin: 12px 0 20px;
+}
+
+.instructions {
+    font-size: 15px;
+    line-height: 1.6em;
+}
+
+.block {
+    margin-bottom: 18px;
+}
+
+.block-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.list {
+    margin-left: 20px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 6px 10px;
+    background-color: #33ff66;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #29cc55;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .banner {
+        font-size: 10px;
+    }
+
+    .instructions {
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="terminal">
+
+    <div class="banner">
+ ██████╗ ██████╗ ███████╗███████╗██████╗ ███████╗
+██╔════╝██╔═══██╗██╔════╝██╔════╝██╔══██╗██╔════╝
+██║     ██║   ██║█████╗  █████╗  ██████╔╝█████╗  
+██║     ██║   ██║██╔══╝  ██╔══╝  ██╔══██╗██╔══╝  
+╚██████╗╚██████╔╝██║     ██║     ██║  ██║███████╗
+ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝     ╚═╝  ╚═╝╚══════╝
+    </div>
+
+    <div class="title">NOTICE D'UTILISATION</div>
+    <div class="separator"></div>
+
+    <div class="instructions">
+
+        <div class="block">
+            <div class="block-title">RÉINITIALISATION :</div>
+            <div class="list">
+                → Placer le cadran sur <strong>0</strong><br>
+                → Effectuer <strong>2 tours complets</strong> dans le <strong>sens inverse</strong>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="block-title">OUVERTURE :</div>
+            <div class="list">
+                → Tourner dans le <strong>sens inverse</strong> jusqu’au <strong>PLUS GRAND</strong><br>
+                → Tourner dans le <strong>sens horaire</strong> jusqu’à l’<strong>INTERMÉDIAIRE</strong> en passant par <strong>0</strong><br>
+                → Tourner dans le <strong>sens inverse</strong> jusqu’au <strong>PLUS PETIT</strong> en passant par <strong>0</strong>
+            </div>
+        </div>
+
+    </div>
+
+    <button onclick="window.location.href='smarterThanUMenu.html'">
+        Retour au menu
+    </button>
+
+</div>
+
+<script>
+// Échap = retour menu
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        window.location.href = "smarterThanUMenu.html";
+    }
+});
+</script>
+
+</body>
+</html>
