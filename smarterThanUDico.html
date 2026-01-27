@@ -161,7 +161,7 @@ function translate() {
     }
 
     if (dictionary[input]) {
-        resultDiv.innerHTML = `<strong>${baseinput}</strong> se traduit par <strong>${dictionary[input]}</strong> en anglais`;
+        resultDiv.innerHTML = `<strong>${baseinput.toUpperCase()}</strong> se traduit par <strong>${dictionary[input].toUpperCase()}</strong> en anglais`;
         resultDiv.style.color = "#33ff66"; // vert
     } else {
         resultDiv.textContent = "Mot non trouvé";
