@@ -25,13 +25,23 @@ body {
     box-sizing: border-box;
 }
 
+/* Wrapper pour centrer la bannière */
+.banner-wrapper {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
 .banner {
-    font-family: monospace;
+    font-family: "Courier New", monospace;
     white-space: pre;
-    text-align: center;
+    text-align: left; /* ne jamais centrer l’ASCII lui-même */
     line-height: 1.2em;
     font-size: 12px;
-    margin-bottom: 15px;
+    color: #33ff66;
+    font-variant-ligatures: none;
+    letter-spacing: 0;
 }
 
 .title {
@@ -78,10 +88,11 @@ button:hover {
     background-color: #29cc55;
 }
 
-/* Responsive */
+/* Responsive mobile */
 @media (max-width: 480px) {
     .banner {
-        font-size: 10px;
+        font-size: 9px;
+        line-height: 1.1em;
     }
 
     .instructions {
@@ -94,16 +105,19 @@ button:hover {
 <body>
 <div class="terminal">
 
-    <div class="banner">
+    <!-- BANNIÈRE -->
+    <div class="banner-wrapper">
+        <div class="banner">
  ██████╗ ██████╗ ███████╗███████╗██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔════╝██╔════╝██╔══██╗██╔════╝
 ██║     ██║   ██║█████╗  █████╗  ██████╔╝█████╗  
 ██║     ██║   ██║██╔══╝  ██╔══╝  ██╔══██╗██╔══╝  
 ╚██████╗╚██████╔╝██║     ██║     ██║  ██║███████╗
  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝     ╚═╝  ╚═╝╚══════╝
+        </div>
     </div>
 
-    <div class="title">NOTICE D'UTILISATION</div>
+    <div class="title">PROCÉDURE D’OUVERTURE2</div>
     <div class="separator"></div>
 
     <div class="instructions">
