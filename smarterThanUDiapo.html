@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIAPORAMA AS400</title>
+
+<style>
+body {
+    background-color: #111;
+    margin: 0;
+    font-family: "Courier New", monospace;
+    color: #33ff66;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.terminal {
+    background-color: #000;
+    padding: 20px;
+    width: 95%;
+    max-width: 800px;
+    box-sizing: border-box;
+}
+
+.banner {
+    white-space: pre;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.2em;
+    margin-bottom: 10px;
+}
+
+.title {
+    text-align: center;
+    font-size: clamp(18px, 5vw, 24px);
+    letter-spacing: 2px;
+}
+
+.separator {
+    border-top: 2px solid #33ff66;
+    margin: 12px 0 20px;
+}
+
+.slideshow {
+    border: 2px solid #33ff66;
+    padding: 10px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.slideshow img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.placeholder-text {
+    font-size: 18px;
+    line-height: 1.6em;
+    white-space: pre-line;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 6px 10px;
+    background-color: #33ff66;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #29cc55;
+}
+
+.footer {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .banner {
+        font-size: 10px;
+    }
+    .placeholder-text {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="terminal">
+
+<div class="banner">
+██████╗ ██╗ █████╗ ██████╗  ██████╗ 
+██╔══██╗██║██╔══██╗██╔══██╗██╔═══██╗
+██║  ██║██║███████║██████╔╝██║   ██║
+██║  ██║██║██╔══██║██╔═══╝ ██║   ██║
+██████╔╝██║██║  ██║██║     ╚██████╔╝
+╚═════╝ ╚═╝╚═╝  ╚═╝╚═╝      ╚═════╝ 
+</div>
+
+<div class="title">DIAPORAMA IMAGES</div>
+<div class="separator"></div>
+
+<div class="slideshow" id="slideshow">
+    <div class="placeholder-text" id="placeholder">
+La ressemblance rend possible la comparaison,
+la différence lui donne du sens
+    </div>
+</div>
+
+<div class="controls">
+    <button id="toggleBtn">Démarrer le diaporama</button>
+    <button id="menuBtn">Retour au menu</button>
+</div>
+
+<div class="footer">
+    Rotation automatique toutes les 3 secondes
+</div>
+
+</div>
+
+<script>
+const images = [
+    "paintings/pine_PB.png",
+    "paintings/desert_PN.png",
+    "paintings/carp_CB.png",
+	"paintings/flight_TN.png",
+    "paintings/cart_FB.png",
+    "paintings/road_TB.png",
+	"paintings/bat_RN.png",
+    "paintings/card_RB.png",
+    "paintings/house_FN.png"
+];
+
+let index = 0;
+let intervalId = null;
+let running = false;
+
+const slideshow = document.getElementById("slideshow");
+const toggleBtn = document.getElementById("toggleBtn");
+
+// Création dynamique de l'image
+const img = document.createElement("img");
+
+function startSlideshow() {
+    index = 0;
+    img.src = images[index];
+
+    slideshow.innerHTML = "";
+    slideshow.appendChild(img);
+
+    intervalId = setInterval(() => {
+        index = (index + 1) % images.length;
+        img.src = images[index];
+    }, 3000);
+
+    toggleBtn.textContent = "Arrêter le diaporama";
+    running = true;
+}
+
+function stopSlideshow() {
+    clearInterval(intervalId);
+    intervalId = null;
+
+    slideshow.innerHTML = `
+        <div class="placeholder-text">
+La ressemblance rend possible la comparaison,
+la différence lui donne du sens
+        </div>
+    `;
+
+    toggleBtn.textContent = "Démarrer le diaporama";
+    running = false;
+}
+
+// Bouton démarrer / arrêter
+toggleBtn.addEventListener("click", () => {
+    if (!running) {
+        startSlideshow();
+    } else {
+        stopSlideshow();
+    }
+});
+
+// Bouton retour menu
+document.getElementById("menuBtn").addEventListener("click", () => {
+    window.location.href = "smarterThanUMenu.html";
+});
+
+// Touche Échap
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        window.location.href = "smarterThanUMenu.html";
+    }
+});
+</script>
+
+</body>
+</html>
