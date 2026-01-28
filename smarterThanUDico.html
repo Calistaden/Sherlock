@@ -132,16 +132,33 @@ button:hover {
 <script>
 // Petit dictionnaire français -> anglais
 const dictionary = {
-    "bonjour": "hello",
-    "chat": "cat",
-    "chien": "dog",
+    "chariot": "cart",
+    "charrette": "cart",
     "maison": "house",
-    "ecole": "school",
-    "fromage": "cheese",
-    "eau": "water",
-    "livre": "book",
-    "arbre": "tree",
-    "soleil": "sun"
+    "pin": "pine",
+    "route": "road",
+    "desert": "desert",
+    "chauve-souris": "bat",
+    "chauve souris": "bat",
+    "vol": "flight",
+    "carpe": "carp",
+	"carte": "card",
+	"chat": "cat",
+	"tuyau": "hose",
+	"tuyau d'arrosage": "garden hose",
+	"epingle": "pin",
+	"canne": "rod",
+	"canne a peche": "fishing rod",
+	"dessert": "dessert",
+	"bateau": "boat",
+	"lumiere": "light",
+	"lampe": "light",
+	"lampe a petrole": "kerosene light",
+	"voiture": "car",
+	"safe": "coffre fort",
+	"spades": "piques",
+	"spade": "pique",
+	"for safe use spades": "pour le coffre fort utilisez les piques",
 };
 
 // Fonction de traduction
@@ -164,7 +181,7 @@ function translate() {
         resultDiv.innerHTML = `<strong>${baseinput.toUpperCase()}</strong> se traduit par <strong>${dictionary[input].toUpperCase()}</strong> en anglais`;
         resultDiv.style.color = "#33ff66"; // vert
     } else {
-        resultDiv.textContent = "Mot non trouvé";
+        resultDiv.textContent = "Mot inconnu";
         resultDiv.style.color = "#ff3333"; // rouge
     }
 }
