@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Énigme Échecs Sherlock Holmes</title>
+<title>L'échec de Sherlock</title>
 <style>
 body {
   font-family: 'Georgia', serif;
@@ -56,8 +56,8 @@ button:hover { background-color: #2a2121; }
 </style>
 </head>
 <body>
-<h1>Énigme Échecs</h1>
-<p>Indice : Chaque lettre correcte révèle un secret caché de Sherlock Holmes.</p>
+<h1>L'échec de Sherlock</h1>
+<p>A quoi peut donc servir ce jeu d'échecs ?</p>
 <div class="coords-row" id="top-coords"></div>
 <div class="board-container">
   <div class="board-wrapper">
@@ -134,7 +134,7 @@ function verifierSolution(){
     }
   }
   document.getElementById('message').textContent = correct ? 
-    'Félicitations ! Vous avez résolu l’énigme et découvert le secret de Sherlock !' : 
+    'Félicitations ! Maintenant lisez moi comme un livre !' : 
     'Certaines lettres sont incorrectes. Continuez votre enquête !';
 }
 </script>
