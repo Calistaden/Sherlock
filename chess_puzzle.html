@@ -50,7 +50,7 @@ button {
 }
 button:hover { background-color: #2a2121; }
 
-#message { margin-top: 15px; font-size: 1.2rem; color: green; font-weight: bold; text-align: center; }
+#message { margin-top: 15px; font-size: 1.2rem; color: black; text-align: center; }
 
 @media(max-width:600px){ h1 { font-size: 2rem; } p { font-size: 0.9rem; } input { font-size: 4vw; } }
 </style>
@@ -133,9 +133,16 @@ function verifierSolution(){
       if(sol !== '' && val !== sol) correct = false; // mauvaise lettre ou vide
     }
   }
-  document.getElementById('message').textContent = correct ? 
-    'Félicitations ! Maintenant lisez moi comme un livre !' : 
-    'Certaines lettres sont incorrectes. Continuez votre enquête !';
+document.getElementById('message').innerHTML = correct ? `
+  Journal de bord de Sherlock<br><br>
+  13 Mars - Partie 2 <br><br>
+  Ma visite dans l'antre de Moriarty m'aura au moins permis de comprendre comment ouvrir son coffre-fort ! <br>
+  J'ai pu observer sa partie d'échecs de prêt et maintenant j'arrive à <strong>lire l'échiquier comme un livre ouvert !</strong> <br><br>
+  La troisième et dernière partie de mon message est cachée dans mon cryptex. <br>
+  La clé pour l’ouvrir se trouve dans les <strong>dates de mon journal.</strong> <br>
+  <span style="color:red;"><strong>11&nbsp;7&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;5&nbsp;25&nbsp;14&nbsp;13</strong></span>
+` : 
+  "Votre solution est incorrecte. Continuez votre enquête !";
 }
 </script>
 </body>
