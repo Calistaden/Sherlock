@@ -283,7 +283,11 @@ function checkVictory(){
     getColor(2,0)==='black' &&
     getColor(2,2)==='black'
   ){
-    document.getElementById('message').textContent = '🎉 Victoire ! Les 4 coins sont noirs !';
+    document.getElementById('message').innerHTML =
+  "🎉 Victoire 🎉<br>" +
+  "Les 4 coins sont noirs !<br>" +
+  "La boîte s'ouvre !<br>" +
+  "Code du cadenas : <strong>666</strong>";
   } else {
     document.getElementById('message').textContent = '';
   }
